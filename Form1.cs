@@ -23,7 +23,8 @@ namespace WindowsFormsApp17
         private void Button1_Click(object sender, EventArgs e)
         {
             //完了
-            Queue.Current?.Complete();
+            var message = Queue.Current;
+            message?.OnCompleted();
         }
 
         private void Button2_Click(object sender, EventArgs e)

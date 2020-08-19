@@ -3,16 +3,25 @@
 namespace PriorityQueue.Src
 {
     /// <summary>
-    /// ソート済みリスト
+    /// ソート済みリスト(先頭項目変化通知付き)
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class SortedList<T>
+    public class SortedList<T>
     {
-        readonly object MyLock = new object();
         readonly List<T> Items = new List<T>();
         readonly IReporter<T> Reporter;
         readonly IComparer<T> Comparer;
+
+        /// <summary>
+        /// 現在の先頭アイテム
+        /// </summary>
         public T Current { get; private set; }
+
+        public SortedList(IComparer<T> comparer)
+        {
+            Reporter = null;
+            Comparer = comparer;
+        }
 
         /// <summary>
         /// コンストラクタ処理
@@ -30,13 +39,9 @@ namespace PriorityQueue.Src
         /// <param name="item"></param>
         public void Add(T item)
         {
-            lock (MyLock)
-            {
-                Items.Add(item);
-                Items.Sort(Comparer);
-                
-                Report();
-            }
+            Items.Add(item);
+            Items.Sort(Comparer);
+            Report();
         }
 
         /// <summary>
@@ -45,15 +50,12 @@ namespace PriorityQueue.Src
         /// <param name="item"></param>
         public void Remove(T item)
         {
-            lock (MyLock)
-            {
-                Items.Remove(item);
-                Report();
-            }
+            Items.Remove(item);
+            Report();
         }
 
         /// <summary>
-        /// 先頭
+        /// 先頭アイテム取得
         /// </summary>
         /// <returns></returns>
         T Peek() => (0 < Items.Count) ? Items[0] : default;

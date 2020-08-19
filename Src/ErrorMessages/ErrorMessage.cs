@@ -50,7 +50,7 @@ namespace PriorityQueue.Src.ErrorMessages
         /// <summary>
         /// 完了通知
         /// </summary>
-        public void Complete()
+        public void OnCompleted()
         {
             FinishEvent.Set();
             DoRemove?.Invoke(this);
